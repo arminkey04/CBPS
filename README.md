@@ -73,5 +73,3 @@ dotnet build
 * [ ] Multiplayer systems
 * [ ] Base / dorm systems
 * [ ] Full client API coverage
-
-**Legend:** `[x]` - Implemented, `[✓]` - Partially Implemented, `[ ]` - Not Started
