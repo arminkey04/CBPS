@@ -80,4 +80,38 @@ public class CommandGiveAll : ICommands
         await arg.SendMsg(I18NManager.Translate("Game.Command.GiveAll.GiveAllItems",
             I18NManager.Translate("Word.SupportCard"), supportCards.Count.ToString()));
     }
+
+    [CommandMethod("weaponskin")]
+    public async ValueTask GiveAllWeaponSkin(CommandArg arg)
+    {
+        if (!await arg.CheckOnlineTarget()) return;
+        if (await arg.GetOption('p') is not int particular) return;
+
+        var detail = arg.GetInt(0);
+        var player = arg.Target!.Player!;
+        List<BaseGameItemInfo> weaponSkins = [];
+        if (detail == -1)
+        {
+            // add all
+            foreach (var config in GameData.WeaponSkinData.Values)
+            {
+                var weaponSkin = await player.InventoryManager!
+                    .AddWeaponSkinItem((ItemTypeEnum)config.Genre, config.Detail, config.Particular, 1, false);
+                if (weaponSkin != null) weaponSkins.Add(weaponSkin);
+            }
+        }
+        else
+        {
+            var weaponSkin = await player.InventoryManager!.AddWeaponSkinItem(ItemTypeEnum.TYPE_WEAPON, (uint)detail, (uint)particular, 1, false);
+            if (weaponSkin == null)
+            {
+                await arg.SendMsg(I18NManager.Translate("Game.Command.GiveAll.NotFound", I18NManager.Translate("Word.WeaponSkin")));
+                return;
+            }
+            weaponSkins.Add(weaponSkin);
+        }
+        if (weaponSkins.Count > 0) await player.SendPacket(new PacketNtfCallScript(weaponSkins));
+        await arg.SendMsg(I18NManager.Translate("Game.Command.GiveAll.GiveAllItems",
+            I18NManager.Translate("Word.WeaponSkin"), weaponSkins.Count.ToString()));
+    }
 }

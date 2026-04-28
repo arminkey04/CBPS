@@ -35,6 +35,7 @@ public class ServerTextCHT
 /// </summary>
 public class WordTextCHT
 {
+    public string WeaponSkin => "武器外觀";
     public string SupportCard => "支援卡";
     public string Weapon => "武器";
     public string Rank => "星魂";
@@ -237,6 +238,7 @@ public class GiveAllTextCHT
     public string Desc => "給予玩家所有物品\n" +
                           "注意：-1 表示全部";
     public string Usage => "用法：/giveall weapon <detail/-1> -p<特定> -l<等級>\n" +
+                           "用法：/giveall weaponskin <detail/-1> -p<特定>\n" +
                            "用法：/giveall card <detail/-1> -p<特定> -l<等級>";
     public string NotFound => "未找到 {0}！";
     public string GiveAllItems => "已向玩家添加 {0} 個 {1}！";

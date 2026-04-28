@@ -23,6 +23,7 @@ public class CharacterInfo
     public int Trust { get; set; }
     public uint WeaponUniqueId { get; set; }
     public uint SkinId { get; set; }
+    public uint WeaponSkinId { get; set; }
     public ItemFlagEnum Flag { get; set; } = ItemFlagEnum.FLAG_READED;
     public uint Expiration { get; set; }
     [SugarColumn(IsJson = true)] public List<uint> UnlockedSkin { get; set; } = [];
@@ -57,6 +58,7 @@ public class CharacterInfo
 
         proto.Slots[4] = WeaponUniqueId;
         proto.Slots[5] = SkinId;
+        proto.Slots[6] = WeaponSkinId;
         foreach (var (slot, uid) in SupportSlots)
             proto.Slots[slot] = uid;
 

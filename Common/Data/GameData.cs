@@ -19,6 +19,7 @@ public static class GameData
     public static Dictionary<uint, SpineExcel> SpineData { get; private set; } = [];
     public static Dictionary<uint, NodeConditionExcel> NodeConditionData { get; private set; } = [];
     public static List<SupportCardExcel> SupportCardData { get; private set; } = [];
+    public static Dictionary<uint, WeaponSkinExcel> WeaponSkinData { get; private set; } = [];
 }
 
 public static class GameResourceTemplateId

@@ -216,4 +216,26 @@ public class InventoryManager(PlayerInstance player) : BasePlayerManager(player)
 
         return itemInfo;
     }
+
+    public async ValueTask<BaseGameItemInfo?> AddWeaponSkinItem(ItemTypeEnum genre, uint detail, uint particular, uint level = 1, bool sendPacket = true)
+    {
+        if (genre != ItemTypeEnum.TYPE_WEAPON_SKIN) return null;
+        var skinData = GameData.WeaponSkinData.Values.FirstOrDefault(x => x.Genre == (int)genre && x.Detail == detail && x.Particular == particular && x.Level == level);
+        if (skinData == null) return null;
+
+        var templateId = GameResourceTemplateId.FromGdpl((uint)genre, detail, particular, level);
+        if (InventoryData.Items.Values.Any(x => x.TemplateId == templateId)) return null;
+        var skinInfo = new BaseGameItemInfo
+        {
+            TemplateId = templateId,
+            UniqueId = InventoryData.NextUniqueUid++,
+            ItemType = ItemTypeEnum.TYPE_WEAPON_SKIN,
+            ItemCount = 1
+        };
+        InventoryData.Items[skinInfo.UniqueId] = skinInfo;
+
+        if (sendPacket) await Player.SendPacket(new PacketNtfCallScript([skinInfo]));
+
+        return skinInfo;
+    }
 }
