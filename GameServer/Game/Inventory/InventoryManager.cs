@@ -25,7 +25,7 @@ public class InventoryManager(PlayerInstance player) : BasePlayerManager(player)
             UniqueId = InventoryData.NextUniqueUid++,
             Level = weaponLevel,
             Break = GetWeaponBreak(weaponLevel),
-            ItemType = ItemTypeEnum.TYPE_WEAPON,
+            ItemType = genre,
             ItemCount = 1
         };
         InventoryData.Weapons[weaponInfo.UniqueId] = weaponInfo;
@@ -67,13 +67,13 @@ public class InventoryManager(PlayerInstance player) : BasePlayerManager(player)
         if (genre != ItemTypeEnum.TYPE_CARD_SKIN) return null;
         var skinData = GameData.CardSkinData.Values.FirstOrDefault(x => x.Genre == (int)genre && x.Detail == detail && x.Particular == particular && x.Level == level);
         if (skinData == null) return null;
-
         var templateId = GameResourceTemplateId.FromGdpl((uint)genre,detail,particular,level);
+        if (InventoryData.Items.Values.Any(x => x.TemplateId == templateId)) return null;
         var skinInfo = new GameSkinInfo
         {
             TemplateId = templateId,
             UniqueId = InventoryData.NextUniqueUid++,
-            ItemType = ItemTypeEnum.TYPE_CARD_SKIN,
+            ItemType = genre,
             ItemCount = 1
         };
         InventoryData.Skins[skinInfo.UniqueId] = skinInfo;
@@ -111,7 +111,7 @@ public class InventoryManager(PlayerInstance player) : BasePlayerManager(player)
         {
             TemplateId = templateId,
             UniqueId = InventoryData.NextUniqueUid++,
-            ItemType = ItemTypeEnum.TYPE_AR,
+            ItemType = genre,
             ItemCount = 1
         };
         InventoryData.Items[arInfo.UniqueId] = arInfo;
@@ -171,7 +171,7 @@ public class InventoryManager(PlayerInstance player) : BasePlayerManager(player)
         {
             TemplateId = templateId,
             UniqueId = InventoryData.NextUniqueUid++,
-            ItemType = ItemTypeEnum.TYPE_MANIFESTATION,
+            ItemType = genre,
             ItemCount = 1
         };
         InventoryData.Items[manifestInfo.UniqueId] = manifestInfo;
@@ -240,7 +240,7 @@ public class InventoryManager(PlayerInstance player) : BasePlayerManager(player)
         {
             TemplateId = templateId,
             UniqueId = InventoryData.NextUniqueUid++,
-            ItemType = ItemTypeEnum.TYPE_WEAPON_SKIN,
+            ItemType = genre,
             ItemCount = 1
         };
         InventoryData.Items[skinInfo.UniqueId] = skinInfo;
@@ -248,5 +248,26 @@ public class InventoryManager(PlayerInstance player) : BasePlayerManager(player)
         if (sendPacket) await Player.SendPacket(new PacketNtfCallScript([skinInfo]));
 
         return skinInfo;
+    }
+
+    public async ValueTask<BaseGameItemInfo?> AddProfileItem(ItemTypeEnum genre, uint detail, uint particular, uint level = 1, bool sendPacket = true)
+    {
+        if (genre < ItemTypeEnum.TYPE_PROFILE || genre > ItemTypeEnum.TYPE_ANALYST) return null;
+        var profileData = GameData.ProfileData.Values.FirstOrDefault(x => x.Genre == (int)genre && x.Detail == detail && x.Particular == particular && x.Level == level);
+        if (profileData == null) return null;
+        var templateId = GameResourceTemplateId.FromGdpl((uint)genre, detail, particular, level);
+        if (InventoryData.Items.Values.Any(x => x.TemplateId == templateId)) return null;
+        var profileInfo = new BaseGameItemInfo
+        {
+            TemplateId = templateId,
+            UniqueId = InventoryData.NextUniqueUid++,
+            ItemType = genre,
+            ItemCount = 1
+        };
+        InventoryData.Items[profileInfo.UniqueId] = profileInfo;
+
+        if (sendPacket) await Player.SendPacket(new PacketNtfCallScript([profileInfo]));
+
+        return profileInfo;
     }
 }

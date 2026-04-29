@@ -11,7 +11,7 @@ public class Daily_SetSelectSuit : ICallGSHandler
         var req = JsonSerializer.Deserialize<GirlWeaponSkinParam>(param);
         if (req == null)
         {
-            await CallGSRouter.SendScript(connection, "GirlWeaponSkin_Change", "{}");
+            await CallGSRouter.SendScript(connection, "Daily_SetSelectSuit", "{}");
             return;
         }
         var rsp = $"{{\"SuitId\":{req.Suit}}}";

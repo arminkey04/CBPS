@@ -96,7 +96,7 @@ public class CommandGiveAll : ICommands
             foreach (var config in GameData.WeaponSkinData.Values)
             {
                 var weaponSkin = await player.InventoryManager!
-                    .AddWeaponSkinItem((ItemTypeEnum)config.Genre, config.Detail, config.Particular, 1, false);
+                    .AddWeaponSkinItem((ItemTypeEnum)config.Genre, config.Detail, config.Particular, config.Level, false);
                 if (weaponSkin != null) weaponSkins.Add(weaponSkin);
             }
         }
@@ -113,5 +113,41 @@ public class CommandGiveAll : ICommands
         if (weaponSkins.Count > 0) await player.SendPacket(new PacketNtfCallScript(weaponSkins));
         await arg.SendMsg(I18NManager.Translate("Game.Command.GiveAll.GiveAllItems",
             I18NManager.Translate("Word.WeaponSkin"), weaponSkins.Count.ToString()));
+    }
+
+    [CommandMethod("profile")]
+    public async ValueTask GiveAllProfile(CommandArg arg)
+    {
+        if (!await arg.CheckOnlineTarget()) return;
+        if (await arg.GetOption('p') is not int particular) return;
+        if (await arg.GetOption('l') is not int level) return;
+        if (await arg.GetOption('g') is not int genre) return;
+
+        var detail = arg.GetInt(0);
+        var player = arg.Target!.Player!;
+        List<BaseGameItemInfo> profileItems = [];
+        if (detail == -1)
+        {
+            // add all
+            foreach (var config in GameData.ProfileData.Values)
+            {
+                var profile = await player.InventoryManager!
+                    .AddProfileItem((ItemTypeEnum)config.Genre, config.Detail, config.Particular, config.Level, false);
+                if (profile != null) profileItems.Add(profile);
+            }
+        }
+        else
+        {
+            var profile = await player.InventoryManager!.AddProfileItem((ItemTypeEnum)genre, (uint)detail, (uint)particular, (uint)level, false);
+            if (profile == null)
+            {
+                await arg.SendMsg(I18NManager.Translate("Game.Command.GiveAll.NotFound", I18NManager.Translate("Word.Profile")));
+                return;
+            }
+            profileItems.Add(profile);
+        }
+        if (profileItems.Count > 0) await player.SendPacket(new PacketNtfCallScript(profileItems));
+        await arg.SendMsg(I18NManager.Translate("Game.Command.GiveAll.GiveAllItems",
+            I18NManager.Translate("Word.Profile"), profileItems.Count.ToString()));
     }
 }

@@ -13,7 +13,7 @@ public class GirlWeaponSkin_Change : ICallGSHandler
         var req = JsonSerializer.Deserialize<GirlWeaponSkinParam>(param);
         if (req == null)
         {
-            await CallGSRouter.SendScript(connection, "GirlWeaponSkin_Change", "{}");
+            await CallGSRouter.SendScript(connection, "GirlWeaponSkin_Change", "{\"err\":\"error.BadParam\"}");
             return;
         }
 
@@ -33,7 +33,7 @@ public class GirlWeaponSkin_Change : ICallGSHandler
             Items = { cardData.ToProto() }
         };
 
-        await CallGSRouter.SendScript(connection, "GirlWeaponSkin_Change", "{}", sync);
+        await CallGSRouter.SendScript(connection, "GirlWeaponSkin_Change", "null", sync);
     }
 }
 

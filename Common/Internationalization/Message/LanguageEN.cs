@@ -35,6 +35,7 @@ public class ServerTextEN
 /// </summary>
 public class WordTextEN
 {
+    public string Profile => "Profile";
     public string WeaponSkin => "Weapon Skin";
     public string Valk => "Valkyrie";
     public string Material => "Material";
@@ -206,7 +207,8 @@ public class GiveAllTextEN
                           "Note: -1 means all";
     public string Usage => "Usage: /giveall weapon <detail/-1> -p<particular> -l<level>\n" +
                            "Usage: /giveall weaponskin <detail/-1> -p<particular>\n" +
-                           "Usage: /giveall card <detail/-1> -p<particular> -l<level>";
+                           "Usage: /giveall card <detail/-1> -p<particular> -l<level>" +
+                           "Usage: /giveall profile <detail/-1> -g<genre> -p<particular> -l<level>";
     public string NotFound => "{0} not found!";
     public string GiveAllItems => "Added {0} {1} to player!";
 }
